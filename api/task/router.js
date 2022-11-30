@@ -15,12 +15,6 @@ router.get('/', async (req,res,next) => {
     }
 })
 
-router.use((err,req,res, next) => { // eslint-disable-line
-    res.status(err.staus || 500).json({
-        customMessage: 'Trouble grabbing Tasks',
-        message: err.message,
-        stack: err.stack
-    })
-})
+
 
 module.exports = router
