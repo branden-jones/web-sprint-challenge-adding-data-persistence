@@ -1,6 +1,9 @@
 // build your `/api/projects` router here
-const router = require('express').Router()
-const Pro = require('./model')
+const router = require('express').Router();
+const Pro = require('./model');
+const {
+    properInsertion,
+} = require('../middleware');
 
 router.get('/', async (req,res,next) => {
     const list = await Pro.getAllProjects()
@@ -9,6 +12,20 @@ router.get('/', async (req,res,next) => {
         next({
             status: 400,
             message: 'could find any projects'
+        })
+    }
+})
+
+router.post('/', properInsertion, async (req,res,next) => {
+    const didPost = await Pro.insertProject(req.body)
+    if(didPost){
+        const posts = await Pro.getAllProjects()
+        res.status(201).json(posts)
+    }
+    else{
+        next({
+            status: 400,
+            message: `your projects did not post`
         })
     }
 })
