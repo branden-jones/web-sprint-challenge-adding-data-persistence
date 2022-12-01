@@ -27,6 +27,36 @@ const properInsertion = async (req,res,next) => {
     }
 }    
      
+const checkResource = async (req,res,next) => {
+    try{
+        const { resource_name } = req.body;
+        if( !resource_name ){
+            next({
+                status: 404,
+                message: 'resource name required'
+            })
+        } else if( resource_name.trim().length === 0){
+            next({
+                status: 404,
+                message: 'not valid resource'
+            })
+        }
+        else{
+            next()
+        }
+    }
+    catch(err){
+        next(err)
+    }
+}
+
+const checkTask = async (req,res,next) => {
+    //description and notes are required
+    //project id is foreign key
+    next()
+}
 module.exports = {
-    properInsertion
+    properInsertion,
+    checkResource,
+    checkTask
 };   

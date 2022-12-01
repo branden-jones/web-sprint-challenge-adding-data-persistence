@@ -11,7 +11,6 @@ async function getById(project_id){
 }
 
 async function insertProject(project) {
-    console.log(project)
     const [ result ] = await db("projects").insert(project);
   return await getById(result)
 }
@@ -19,4 +18,5 @@ async function insertProject(project) {
 module.exports = {
   getAllProjects,
   insertProject,
+  getById
 };

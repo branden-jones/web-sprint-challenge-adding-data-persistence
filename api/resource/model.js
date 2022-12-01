@@ -6,11 +6,32 @@ async function listResources(){
     return result
 }
 
-// async function addResource(newResource){
-//     const added = await db('resources')
-//             .insert(newResource)
-// }
+async function specificResource(resource_id){
+    return db('resources')
+            .where({resource_id})
+}
+
+async function doesNameExist(resource_name){
+    const [checkRes] = await db('resources')
+        .where({resource_name})
+    return !!checkRes
+}
+
+async function addResource(newResource){
+    const [ added ] = await db('resources')
+            .insert(newResource)
+    return specificResource(added)
+}
 
 module.exports = {
-    listResources
+    listResources,
+    addResource,
+    doesNameExist,
 };
+
+// if(newResource.project_id){
+    //     const validProjCheck = await getById(newResource.project_id)
+        // if(validProjCheck){
+        //     const projectAssignment = await insertIntoProjReso(newResource.project_id)
+        // }
+    // }
