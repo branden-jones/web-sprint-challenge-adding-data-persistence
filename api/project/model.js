@@ -6,8 +6,9 @@ async function getAllProjects() {
 }
 
 async function getById(project_id){
-    return db('projects')
+    const result = await db('projects')
         .where({project_id})
+    return result
 }
 
 async function insertProject(project) {
