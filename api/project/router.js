@@ -7,7 +7,12 @@ const {
 
 router.get('/', async (req,res,next) => {
     const list = await Pro.getAllProjects()
-    if (list) {res.status(200).json(list)}
+    if (list) {res.status(200).json(list.map(proj => {
+        return {
+            ...proj,
+            project_completed: proj.project_completed ? true : false
+        }
+    }))}
     else { 
         next({
             status: 400,
@@ -17,16 +22,15 @@ router.get('/', async (req,res,next) => {
 })
 
 router.post('/', properInsertion, async (req,res,next) => {
-    const didPost = await Pro.insertProject(req.body)
-    if(didPost){
-        const posts = await Pro.getAllProjects()
-        res.status(201).json(posts)
-    }
-    else{
-        next({
-            status: 400,
-            message: `your projects did not post`
+    try{ 
+        const [ didPost ] = await Pro.insertProject(req.body)
+        res.status(201).json({
+            ...didPost,
+            project_completed: didPost.project_completed ? true : false
         })
+    } 
+    catch(err){
+        next(err)
     }
 })
 

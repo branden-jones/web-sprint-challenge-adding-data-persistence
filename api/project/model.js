@@ -1,21 +1,22 @@
 // build your `Project` model here
-const db = require('../../data/dbConfig');
+const db = require("../../data/dbConfig");
 
-async function getAllProjects (){
-    return db('projects')
+async function getAllProjects() {
+  return db("projects");
 }
 
-async function insertProject (project){
+async function getById(project_id){
     return db('projects')
-        .insert(project)
-        .then(([project_id]) => {
-            return db('projects')
-                .where('project_id',project_id)
-                .first()
-        })
+        .where({project_id})
+}
+
+async function insertProject(project) {
+    console.log(project)
+    const [ result ] = await db("projects").insert(project);
+  return await getById(result)
 }
 
 module.exports = {
-    getAllProjects,
-    insertProject
-}
+  getAllProjects,
+  insertProject,
+};
