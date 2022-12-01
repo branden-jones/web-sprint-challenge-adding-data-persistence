@@ -1,4 +1,5 @@
 const db = require('../data/dbConfig'); //eslint-disable-line
+const { getById } = require('./project/model')
                                   
 const properInsertion = async (req,res,next) => {
     try{                          
@@ -51,9 +52,33 @@ const checkResource = async (req,res,next) => {
 }
 
 const checkTask = async (req,res,next) => {
-    //description and notes are required
-    //project id is foreign key
-    next()
+    const { task_description, project_id } = req.body;
+    try{
+        if(!task_description){
+            next({
+                status: 400,
+                message: 'Task Description required'
+            })
+        } else if(!project_id){
+            next({
+                status: 400,
+                message: 'Project Id required'
+            })
+        } else {
+            const validProj = await getById(project_id)
+            if(!validProj[0]){
+                next({
+                    status: 404,
+                    message: 'Project Id does not exist'
+                })
+            } else {
+                next()
+            }
+        }
+    }
+    catch(err){
+        next(err)
+    }
 }
 module.exports = {
     properInsertion,

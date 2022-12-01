@@ -14,13 +14,19 @@ async function getTask(){
         .orderBy('p.project_id')
 }
 
-async function addTask(task){ //eslint-disable-line
-    return db('tasks')
+async function findById(task_id){
+    const desiredTask = await db('tasks')
+        .where({task_id})
+    return desiredTask
 }
 
+async function addTask(task){ //eslint-disable-line
+    const toBeInserted = await db('tasks')
+        .insert(task)
+    const [newTask] = await findById(toBeInserted);
+    return newTask
+}
 
-//task needs to join with project
-// and should include project_name and project_description
 module.exports = {
     getTask,
     addTask

@@ -1,6 +1,7 @@
 // build your `/api/tasks` router here
 const router = require('express').Router()
 const Task = require('./model')
+const { checkTask } = require('../middleware');
 
 
 router.get('/', async (req,res,next) => {
@@ -20,6 +21,17 @@ router.get('/', async (req,res,next) => {
     }
 })
 
+router.post('/', checkTask, async (req,res,next) => {
+    const newTask = await Task.addTask(req.body)
+    if(newTask){
+        res.status(201).json({
+                ...newTask,
+                task_completed: newTask.task_completed ? true : false
+        })
+    } else {
+        next()
+    }
+})
 
 
 module.exports = router
